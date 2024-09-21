@@ -1,0 +1,27 @@
+# From https://github.com/pypa/sampleproject/blob/main/pyproject.toml
+
+[project]
+name = "dm-bouncer"
+version = "0.0.1"
+description = "A DM (direct message) bouncing service for Bluesky."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = {file = "LICENSE"}
+keywords = ["bluesky", "astronomy"]
+authors = [
+  {name = "Emily L. Hunt", email = "emily.hunt.physics@gmail.com" }
+]
+maintainers = [
+  {name = "Emily L. Hunt", email = "emily.hunt.physics@gmail.com" }
+]
+dependencies = [
+  "astrofeed_lib@git+https://github.com/bluesky-astronomy/astrofeed-lib",
+]
+
+[project.urls]
+"Homepage" = "https://astronomy.blue/"
+"Bug Reports" = "https://github.com/bluesky-astronomy/dm-bouncerb"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
