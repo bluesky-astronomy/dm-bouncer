@@ -59,6 +59,7 @@ def broadcast_new_messages(
     messages_text = format_message_text(updated_convos, messages)
 
     # Setup the full list of all messages to send out
+    # TODO: convo IDs should be cached. This would reduce request load.
     all_convos = [
         dm_client.chat.bsky.convo.get_convo_for_members(
             params=dict(members=[did])
