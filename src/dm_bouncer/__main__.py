@@ -1,4 +1,5 @@
 import time
+import traceback
 from .message import get_unread_messages, broadcast_new_messages
 from astrofeed_lib.client import get_client
 from .config import (
@@ -40,4 +41,13 @@ def run_loop():
 
 
 if __name__ == "__main__":
-    run_loop()
+
+    while True:
+        try:
+            run_loop()
+        except Exception as e:
+            print(f"EXCEPTION: {e}")
+            print(traceback.format_exception(e))
+            print("Waiting 60 seconds...")
+            time.sleep(60)
+            print("Restarting...")
