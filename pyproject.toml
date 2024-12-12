@@ -1,7 +1,7 @@
 # From https://github.com/pypa/sampleproject/blob/main/pyproject.toml
 
 [project]
-name = "dm-bouncer"
+name = "dm_bouncer"
 version = "0.0.1"
 description = "A DM (direct message) bouncing service for Bluesky."
 readme = "README.md"
