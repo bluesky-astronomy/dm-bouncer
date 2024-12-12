@@ -3,26 +3,31 @@ import traceback
 from .message import get_unread_messages, broadcast_new_messages
 from astrofeed_lib.client import get_client
 from .config import (
-    HANDLE,
-    PASSWORD,
-    DM_CHECK_TIME,
-    DM_GROUP,
-    ADD_OTHER_MODERATORS,
-    MINIMUM_MOD_LEVEL,
-    CACHED_MODERATOR_LIST,
+    DM_BOUNCER_HANDLE,
+    DM_BOUNCER_PASSWORD,
+    DM_BOUNCER_CHECK_TIME,
+    DM_BOUNCER_ACCOUNTS,
+    ASTROFEED_PRODUCTION,
+    DM_BOUNCER_MINIMUM_MOD_LEVEL,
+    cached_moderator_list,
 )
 
 
 def run():
-    """Runs a single instance of the DM bouncer."""
-    client = get_client(HANDLE, PASSWORD)
+    """Runs the DM bouncer once."""
+    # Grab & set up our client
+    client = get_client(DM_BOUNCER_HANDLE, DM_BOUNCER_PASSWORD)
     dm_client = client.with_bsky_chat_proxy()
-    accounts_to_dm = DM_GROUP.copy()
-    if ADD_OTHER_MODERATORS and MINIMUM_MOD_LEVEL < 5:
+
+    # Work out which accounts we need to DM (which is DM_BOUNCER_ACCOUNTS plus 
+    # optionally the moderators)
+    accounts_to_dm = DM_BOUNCER_ACCOUNTS.copy()
+    if ASTROFEED_PRODUCTION:
         accounts_to_dm.update(
-            CACHED_MODERATOR_LIST.get_accounts_above_level(MINIMUM_MOD_LEVEL)
+            cached_moderator_list.get_accounts_above_level(DM_BOUNCER_MINIMUM_MOD_LEVEL)
         )
 
+    # Handle receiving & sending messages to the group
     updated_convos, new_messages, message_convo_mapping = get_unread_messages(
         dm_client, accounts_to_dm
     )
@@ -37,7 +42,7 @@ def run_loop():
         print("Bouncing DMs...")
         run()
         print("Sleeping...")
-        time.sleep(DM_CHECK_TIME)
+        time.sleep(DM_BOUNCER_CHECK_TIME)
 
 
 if __name__ == "__main__":
@@ -45,6 +50,8 @@ if __name__ == "__main__":
     while True:
         try:
             run_loop()
+
+        # Todo do we really want to catch all exceptions? Eventually will be better to have a service that auto-restarts
         except Exception as e:
             print(f"EXCEPTION: {e}")
             print(traceback.format_exception(e))
