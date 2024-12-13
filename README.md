@@ -32,11 +32,11 @@ uv run -m dm_bouncer
 To run the DM bouncer, you'll need to set the following environment variables.
 
 **Mandatory:**
-* `DM_BOUNCER_HANDLE` - the handle of the account that will bounce DMs (without an @). _Example:_ `"joebloggs.bsky.social"`.
+* `DM_BOUNCER_HANDLE` - the handle of the account that will bounce DMs (without an @). Any DMs users send to this account will be sent to all other accounts in the DM bouncing group. _Example:_ `"moderationchat.astronomy.blue"`.
 * `DM_BOUNCER_PASSWORD` - an app password for the account. **When creating the app password, make sure it has access to DMs** (there's a checkbox.)
 
 **Mandatory in development:**
-* `DM_BOUNCER_ACCOUNTS` - a string with comma-separated DIDs of users to send messages to. At least two are required to do anything! You can look up the DID of an account [with this tool](https://bsky-debug.app/handle?handle=astronomy.blue). _Example:_ `"did:plc:jcoy7v3a2t4rcfdh6i4kza25,did:plc:ko747jc5ma4iarwwfwrlv2ct"` would bounce DMs between @emily.space and @moderation.astronomy.blue.
+* `DM_BOUNCER_ACCOUNTS` - a string with comma-separated DIDs of users to receive messages from and send messages to. At least two are required to do anything! You can look up the DID of an account [with this tool](https://bsky-debug.app/handle?handle=astronomy.blue). _Example:_ `"did:plc:jcoy7v3a2t4rcfdh6i4kza25,did:plc:ko747jc5ma4iarwwfwrlv2ct"` would bounce DMs between @emily.space and @moderation.astronomy.blue.
 
 **Mandatory in production:**
 * `ASTROFEED_PRODUCTION` - set to True to automatically DM all moderators of the astronomy feeds, in addition to the accounts specified in `DM_BOUNCER_ACCOUNTS`. Also requires separate database access specified via [astrofeed-lib](https://github.com/bluesky-astronomy/astrofeed-lib).
