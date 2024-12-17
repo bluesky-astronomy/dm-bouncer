@@ -39,7 +39,8 @@ To run the DM bouncer, you'll need to set the following environment variables.
 * `DM_BOUNCER_ACCOUNTS` - a string with comma-separated DIDs of users to receive messages from and send messages to. At least two are required to do anything! You can look up the DID of an account [with this tool](https://bsky-debug.app/handle?handle=astronomy.blue). _Example:_ `"did:plc:jcoy7v3a2t4rcfdh6i4kza25,did:plc:ko747jc5ma4iarwwfwrlv2ct"` would bounce DMs between @emily.space and @moderation.astronomy.blue.
 
 **Mandatory in production:**
-* `ASTROFEED_PRODUCTION` - set to True to automatically DM all moderators of the astronomy feeds, in addition to the accounts specified in `DM_BOUNCER_ACCOUNTS`. Also requires separate database access specified via [astrofeed-lib](https://github.com/bluesky-astronomy/astrofeed-lib).
+* `ASTROFEED_PRODUCTION` - set to True to automatically DM all moderators of the astronomy feeds, in addition to the accounts specified in `DM_BOUNCER_ACCOUNTS`.
+* `BLUESKY_DATABASE` - a connection string for a remote MySQL database (see [the astrofeed-lib docs](https://github.com/bluesky-astronomy/astrofeed-lib) for more information.)
 
 **Optional:**
 * `DM_BOUNCER_CHECK_TIME` - how often to check for new messages (default: 60 seconds)
