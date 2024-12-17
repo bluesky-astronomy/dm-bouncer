@@ -32,10 +32,12 @@ To run the DM bouncer, you'll need to set the following environment variables.
 * `DM_BOUNCER_PASSWORD` - an app password for the account.
 
 **Mandatory in development:**
-* `DM_BOUNCER_ACCOUNTS` - a string with comma-separated DIDs of users to send messages to.
+* `DM_BOUNCER_ACCOUNTS` - a string with comma-separated DIDs of users to send messages to. In production, this also allows you to specify extra accounts (in addition to the moderators) who will be in the DM group.
 
 **Mandatory in production:**
 * `ASTROFEED_PRODUCTION` - set to True to automatically DM all moderators.
+* `BLUESKY_DATABASE` - a connection string for a remote MySQL database (see [astrofeed-lib docs](https://github.com/bluesky-astronomy/astrofeed-lib) for more information.)
+
 
 **Optional:**
 * `DM_BOUNCER_CHECK_TIME` - how often to check for new messages (default: 60 seconds)
