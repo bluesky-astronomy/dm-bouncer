@@ -7,7 +7,7 @@ from atproto import IdResolver
 # -------------------------
 # Whether or not we're in production mode. Production mode will cause all moderators to
 # be added to the DM group automatically.
-ASTROFEED_PRODUCTION = bool(os.getenv("ASTROFEED_PRODUCTION", False))
+from astrofeed_lib.config import ASTROFEED_PRODUCTION
 
 # Login details for the bot.
 DM_BOUNCER_HANDLE = os.getenv("DM_BOUNCER_HANDLE", None)
