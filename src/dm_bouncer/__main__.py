@@ -54,7 +54,7 @@ if __name__ == "__main__":
         # Todo do we really want to catch all exceptions? Eventually will be better to have a service that auto-restarts
         except Exception as e:
             print(f"EXCEPTION: {e}")
-            print(traceback.format_exception(e))
+            traceback.print_exception(e)
             print("Waiting 60 seconds...")
             time.sleep(60)
             print("Restarting...")
