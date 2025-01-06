@@ -19,7 +19,7 @@ def run():
     client = get_client(DM_BOUNCER_HANDLE, DM_BOUNCER_PASSWORD)
     dm_client = client.with_bsky_chat_proxy()
 
-    # Work out which accounts we need to DM (which is DM_BOUNCER_ACCOUNTS plus 
+    # Work out which accounts we need to DM (which is DM_BOUNCER_ACCOUNTS plus
     # optionally the moderators)
     accounts_to_dm = DM_BOUNCER_ACCOUNTS.copy()
     if ASTROFEED_PRODUCTION:
@@ -44,17 +44,33 @@ def run_loop():
         print("Sleeping...")
         time.sleep(DM_BOUNCER_CHECK_TIME)
 
+        # Reset the exception counter on every successful run
+        global exception_count
+        exception_count = 0
+
+
+exception_count = 0
+
 
 if __name__ == "__main__":
-
     while True:
         try:
             run_loop()
 
-        # Todo do we really want to catch all exceptions? Eventually will be better to have a service that auto-restarts
         except Exception as e:
-            print(f"EXCEPTION: {e}")
             traceback.print_exception(e)
-            print("Waiting 60 seconds...")
-            time.sleep(60)
-            print("Restarting...")
+            exception_count += 1
+            if exception_count > 10:
+                print("Max exception count exceeded! Quitting service.")
+                raise e
+
+        # Sleep for between 10 to 600 seconds
+        sleep_time = 10 * exception_count**2
+        if sleep_time > 600:
+            sleep_time = 600
+        print(
+            f"Exception count: {exception_count}\n"
+            f"Restarting in {sleep_time} seconds..."
+        )
+        time.sleep(sleep_time)
+        print("Restarting...")
