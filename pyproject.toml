@@ -15,7 +15,7 @@ maintainers = [
   {name = "Emily L. Hunt", email = "emily.hunt.physics@gmail.com" }
 ]
 dependencies = [
-  "astrofeed_lib@git+https://github.com/bluesky-astronomy/astrofeed-lib",
+  "astronomy_feeds @ git+https://github.com/bluesky-astronomy/astronomy-feeds",
 ]
 
 [project.urls]
