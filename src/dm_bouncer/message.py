@@ -1,3 +1,4 @@
+from astrofeed_lib import logger
 from atproto import Client
 
 # TODO: refactor code in this module into methods (currently a mess)
@@ -51,10 +52,10 @@ def broadcast_new_messages(
 ):
     """Broadcasts all new messages to the DM bouncing group."""
     if len(messages) == 0:
-        print("No messages found to broadcast")
+        logger.info("No messages found to broadcast")
         return
 
-    print(f"Broadcasting messages (total unreads = {len(messages)})")
+    logger.info(f"Broadcasting messages (total unreads = {len(messages)})")
     # Format the text in received messages
     messages_text = format_message_text(updated_convos, messages)
 
@@ -80,11 +81,11 @@ def broadcast_new_messages(
                 )
 
     if len(messages_to_send) == 0:
-        print("-> no messages are valid to broadcast")
+        logger.warning("-> no messages are valid to broadcast")
         update_read_status(dm_client, messages, message_convo_mapping)
         return
     
-    print(f"-> found {len(messages_to_send)} messages to broadcast")
+    logger.info(f"-> found {len(messages_to_send)} messages to broadcast")
 
     # Sort the messages into batches of upto 100 in length (current ATProto limit)
     message_batches = []
@@ -96,7 +97,7 @@ def broadcast_new_messages(
     # N.B.: messages with identical text ae usually soft-rejected by the server (seems
     # to be anti-spam)
     for batch in message_batches:
-        print("Sending batch of messages...")
+        logger.info("Sending batch of messages...")
         dm_client.chat.bsky.convo.send_message_batch(data=dict(items=batch))
 
     # Update the read status on the client
@@ -109,6 +110,8 @@ def update_read_status(
     """Updates the read status of conversations in the DM bouncing group to the
     latest point.
     """
+    logger.debug("Updating message read status")
+
     # Get the most recent read message in each convo. This works because it's in
     # ascending time order, so the last message we assign to each convo is hence the
     # last one we saw
@@ -125,6 +128,8 @@ def update_read_status(
 
 def format_message_text(updated_convos: dict, messages: list) -> list[str]:
     """Formats text of a message to include the account name, handle, and time sent."""
+    logger.debug("Formatting message text")
+
     # Firstly, make a dict of did: name & handle mappings
     did_name_mappings = {}
     for convo in updated_convos.values():

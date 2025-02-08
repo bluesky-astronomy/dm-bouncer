@@ -1,5 +1,5 @@
+from astrofeed_lib import logger
 import time
-import traceback
 from .message import get_unread_messages, broadcast_new_messages
 from astrofeed_lib.client import get_client
 from .config import (
@@ -39,9 +39,9 @@ def run():
 def run_loop():
     """Runs the DM bouncer indefinitely until stopped."""
     while True:
-        print("Bouncing DMs...")
+        logger.info("Bouncing DMs...")
         run()
-        print("Sleeping...")
+        logger.info("Sleeping...")
         time.sleep(DM_BOUNCER_CHECK_TIME)
 
         # Reset the exception counter on every successful run
@@ -53,24 +53,31 @@ exception_count = 0
 
 
 if __name__ == "__main__":
+    logger.info(
+        f"Starting DM bouncer! Config: ASTROFEED_PRODUCTION={ASTROFEED_PRODUCTION} "
+        f"DM_BOUNCER_CHECK_TIME={DM_BOUNCER_CHECK_TIME} "
+        f"DM_BOUNCER_MINIMUM_MOD_LEVEL={DM_BOUNCER_MINIMUM_MOD_LEVEL} "
+        f"DM_BOUNCER_ACCOUNTS={DM_BOUNCER_ACCOUNTS}"
+    )
+
     while True:
         try:
             run_loop()
 
         except Exception as e:
-            traceback.print_exception(e)
+            logger.error("Fatal issue encountered in DM bouncer!", exc_info=1)
             exception_count += 1
             if exception_count > 10:
-                print("Max exception count exceeded! Quitting service.")
+                logger.critical("Max exception count exceeded! Quitting service.")
                 raise e
 
         # Sleep for between 10 to 600 seconds
         sleep_time = 10 * exception_count**2
         if sleep_time > 600:
             sleep_time = 600
-        print(
+        logger.error(
             f"Exception count: {exception_count}\n"
             f"Restarting in {sleep_time} seconds..."
         )
         time.sleep(sleep_time)
-        print("Restarting...")
+        logger.error("Restarting...")
