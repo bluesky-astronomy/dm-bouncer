@@ -10,9 +10,11 @@ def get_unread_messages(dm_client: Client, accounts: set) -> tuple[dict, list]:
     # - One member
     # - In the broadcast group (the set 'accounts')
     # - Unread messages
+    logger.debug("Fetching views of all conversations to check")
     convos_list = dm_client.chat.bsky.convo.list_convos()
     valid_convos = dict()
     for convo in convos_list.convos:
+        logger.debug("Fetching unread messages")
         single_conversation = len(convo.members) == 2
         in_broadcast_group = (
             convo.members[0].did in accounts or convo.members[1].did in accounts
@@ -22,6 +24,7 @@ def get_unread_messages(dm_client: Client, accounts: set) -> tuple[dict, list]:
             valid_convos[convo.id] = convo
 
     # Fetch all unread messages in these conversations
+    logger.debug(f"Fetching unread messages in {len(valid_convos)} conversations")
     unread_messages = []
     message_convo_mapping = dict()
     for convo_id, convo in valid_convos.items():

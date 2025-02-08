@@ -16,6 +16,7 @@ from .config import (
 def run():
     """Runs the DM bouncer once."""
     # Grab & set up our client
+    logger.debug("Fetching Bluesky client")
     client = get_client(DM_BOUNCER_HANDLE, DM_BOUNCER_PASSWORD)
     dm_client = client.with_bsky_chat_proxy()
 
@@ -23,6 +24,7 @@ def run():
     # optionally the moderators)
     accounts_to_dm = DM_BOUNCER_ACCOUNTS.copy()
     if ASTROFEED_PRODUCTION:
+        logger.debug("Adding feed mods to the list of accounts to DM")
         accounts_to_dm.update(
             cached_moderator_list.get_accounts_above_level(DM_BOUNCER_MINIMUM_MOD_LEVEL)
         )
